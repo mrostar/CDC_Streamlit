@@ -15,7 +15,7 @@ st.sidebar.header('Select Features')
 
 unique_ages = sorted(df['AGE'].unique())
 unique_ages = [age for age in unique_ages if age != 'All ages']
-age_ranges = st.sidebar.multiselect("Select Age Range(s)", unique_ages)
+age_ranges = st.sidebar.multiselect("Select Age Range(s)", unique_ages, default = '85 years and over')
 
 
 # creating the line graph based on the filters
@@ -36,4 +36,3 @@ line_chart = alt.Chart(avg_estimates_year_age).mark_line().encode(
 )
 st.altair_chart(line_chart, use_container_width=True)
 
-#add buttons to different graphs
