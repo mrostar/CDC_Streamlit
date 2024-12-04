@@ -36,4 +36,4 @@ line_chart = alt.Chart(avg_estimates_year_age).mark_line().encode(
 )
 st.altair_chart(line_chart, use_container_width=True)
 
-#add buttons
+#add buttons to different graphs
