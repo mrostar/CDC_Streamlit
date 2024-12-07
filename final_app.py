@@ -209,14 +209,15 @@ def gender_page():
     ).properties(title='Average Estimate for Females Over Time'
         ).configure_title(anchor='middle', fontSize = 13)
 
-   
+
     col1, col2 = st.columns(2)
     with col1:
+        st.write('Average **male** estimate (all years): **19.34**')
         st.altair_chart(male_chart, use_container_width=True)
     
     with col2: 
+        st.write('Average **female** estimate (all years): **5.05**')
         st.altair_chart(female_chart, use_container_width=True)
-
 
 ###########
 fn_map = {
