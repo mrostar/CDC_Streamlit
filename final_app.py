@@ -59,7 +59,7 @@ def intro_page():
         ).properties(
             title='Average Estimate Over Time'
         )
-
+# try to tilt the x axis (years)
 
     line_chart = alt.Chart(avg_estimates_by_year).mark_line(color='blue').encode(
         x=alt.X('YEAR:O'),  
