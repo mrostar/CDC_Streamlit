@@ -32,8 +32,8 @@ age_range_button = st.sidebar.button(
 
 # introduction page
 def intro_page():
-    st.title('CDC Suicide Analysis Project')
-    st.write('Suicide is one of the leading causes of death in the United States, affecting people of all ages and races. In just 2018 alone, there were 48,344 deaths by suicide. This was the 10th leading cause of death that year. The data is taken from the CDC, and the dashboards are designed to visualize trends in suicide death rates in the United States.')
+    st.markdown("<h1 style='text-align: center;'>CDC Suicide Analysis Project</h1>", unsafe_allow_html=True)
+    st.write('Suicide is one of the leading causes of death in the United States, affecting people of all ages and races. In just **2018** alone, there were **48,344** deaths by suicide. This was the **10th** leading cause of death that year. The data is taken from the CDC, and the dashboards are designed to visualize trends in suicide death rates in the United States.')
 
     st.sidebar.header('Filter Graph by Year')
 
@@ -71,9 +71,46 @@ def intro_page():
     )
     layered_chart = (bar_chart + line_chart).properties(
             title='Average Estimates Over Time'
-        )
+        ).configure_title(anchor = 'middle')
         
     st.altair_chart(layered_chart, use_container_width=True)
+
+   
+    st.markdown(
+         """
+        <div style='font-size: 15px; line-height: 1.6; text-align: center; width: 100%; padding: 20px;'>
+         <strong>Definition of estimate</strong>: The calculated estimate of the measure. 
+         In this case, the measure is the death rate for suicide in the United States, measured 
+          as deaths per 100,000 residents (crude estimate).
+          </div>
+          """, 
+          unsafe_allow_html=True
+      )
+
+    df_filtered = df.dropna(subset=['ESTIMATE'])
+    df_filtered['YEAR']= df_filtered['YEAR'].astype(str)
+
+    avg_estimates_by_year = df_filtered.groupby('YEAR').agg( 
+    avg_estimate=('ESTIMATE', 'mean'), num_observations=('ESTIMATE', 'size')).reset_index()
+    
+    avg_estimates_by_year['avg_estimate'] = avg_estimates_by_year['avg_estimate'].round(2)
+    avg_estimates_by_year = avg_estimates_by_year.sort_values(by='avg_estimate', ascending=False)
+
+    avg_estimates_by_year = avg_estimates_by_year.rename(columns={
+        'YEAR': 'Year',
+        'avg_estimate': 'Avg Estimate',
+        'num_observations': '# of non-null estimate taken'
+    })
+
+    st.dataframe(avg_estimates_by_year, use_container_width=True)
+
+    
+   
+
+
+
+
+
 
 
 
