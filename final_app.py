@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
-import seaborn as sns
 import altair as alt
-
 
 # page configuration
 st.set_page_config(layout = "wide", initial_sidebar_state='expanded')
@@ -17,15 +15,6 @@ df = load_data('streamlit_data.csv')
 # initializes the current page in the session state if non-existing
 if 'current_page' not in st.session_state:
     st.session_state.current_page = 'Introduction'
-
-# intializes the age filter selection(s) in the session state  
-if "age_ranges" not in st.session_state:
-    st.session_state.age_ranges = ["85 years and over"]
-
-# intializes the year filter selection(s) in the session state 
-if "selected_years" not in st.session_state:
-    st.session_state.selected_years = [1950, 1960, 1970, 1980, 1990, 2000, 2010, 2018]
-
 
 # defines what to do when you click on a button
 def switch_page(page: str):
@@ -53,13 +42,10 @@ def intro_page():
     selected_years = st.sidebar.multiselect(
         "Select Year(s):", 
         options=sorted(df['YEAR'].unique()), 
-        default=st.session_state.selected_years 
+        default= default_years
     )
 
-    if selected_years != st.session_state.selected_years:
-        st.session_state.selected_years = selected_years
-
-    filtered_data = df[df['YEAR'].isin(st.session_state.selected_years)]
+    filtered_data = df[df['YEAR'].isin(selected_years)]
 
     avg_estimates_by_year = filtered_data.groupby('YEAR')['ESTIMATE'].mean().round(2).reset_index()
 
@@ -105,12 +91,12 @@ def age_page():
     # age_selection = [] 
     age_ranges = st.sidebar.multiselect(
         "Select Age Range(s)", unique_ages,  
-        default = st.session_state.age_ranges)
+        default = ['85 years and over'])
     
     st.session_state.age_ranges = age_ranges
     
     # creating the line graph based on the filters
-    filtered_data = df[df['AGE'].isin(st.session_state.age_ranges)]
+    filtered_data = df[df['AGE'].isin(age_ranges)]
     avg_estimates_year_age = filtered_data.groupby(['YEAR', 'AGE'])['ESTIMATE'].mean().reset_index()
 
     line_chart = alt.Chart(avg_estimates_year_age).mark_line().encode(
