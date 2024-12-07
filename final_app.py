@@ -105,15 +105,6 @@ def intro_page():
     st.dataframe(avg_estimates_by_year, use_container_width=True)
 
     
-   
-
-
-
-
-
-
-
-
 ############################
 # avg estimate by age range page
 def age_page():
