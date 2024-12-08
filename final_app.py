@@ -153,7 +153,7 @@ def age_page():
         with the highest average coming in the year **1991**, where people 
         ages **85 years and above** had an average estimate of **43.58**. As you age, your health **decreases**, 
         you become more susceptible to **loneliness**, and you often become **dependent** on others. 
-        All of these things can lead to **higher** rates of suicide."
+        All of these things can lead to **higher** rates of suicide.
     """)
 
 
@@ -182,42 +182,84 @@ def gender_page():
 
     male_data = filtered_data[filtered_data['STUB_LABEL'] == 'Male']
     avg_estimates_male = male_data.groupby('YEAR')['ESTIMATE'].mean().reset_index()
-    
+    overall_avg_male = avg_estimates_male['ESTIMATE'].mean()
+
     female_data = filtered_data[filtered_data['STUB_LABEL'] == 'Female']
     avg_estimates_female = female_data.groupby('YEAR')['ESTIMATE'].mean().reset_index()
-    
-    male_chart = alt.Chart(avg_estimates_male).mark_bar(color='#7BAFD4').encode(
-        x=alt.X('YEAR:O', title='Year'),  
-        y=alt.Y('ESTIMATE:Q', title='Average Estimate'),  
-        tooltip=[
-            alt.Tooltip('YEAR:O', title='Year'),
-            alt.Tooltip('ESTIMATE:Q', title='Average Estimate')
-        ]  
-    ).properties(
+    overall_avg_female = avg_estimates_female['ESTIMATE'].mean()
+
+
+    male_chart = (
+    (
+        alt.Chart(avg_estimates_male)
+        .mark_bar(color='#7BAFD4')
+        .encode(
+            x=alt.X('YEAR:O', title='Year'),  
+            y=alt.Y('ESTIMATE:Q', title='Average Estimate'),  
+            tooltip=[
+                alt.Tooltip('YEAR:O', title='Year'),
+                alt.Tooltip('ESTIMATE:Q', title='Average Estimate')
+            ]  
+        )
+        + alt.Chart(pd.DataFrame({'y': [round(overall_avg_male, 2)]}))
+        .mark_rule(color='black', strokeDash=[4, 2])
+        .encode(
+            y='y:Q',
+            tooltip=[alt.Tooltip('y:Q', title='Overall Average')]
+        )
+    )
+    .properties(
         title='Average Estimate for Males Over Time'
-    ).configure_title(anchor='middle', fontSize = 13)
+    )
+    .configure_title(anchor='middle', fontSize=13)
+)
 
 
-
-    female_chart = alt.Chart(avg_estimates_female).mark_bar(color='pink').encode(
-        x=alt.X('YEAR:O', title='Year'),
-        y=alt.Y('ESTIMATE:Q', title='Average Estimate'),
-        tooltip=[
-            alt.Tooltip('YEAR:O', title='Year'),
-            alt.Tooltip('ESTIMATE:Q', title='Average Estimate')
-        ]
-    ).properties(title='Average Estimate for Females Over Time'
-        ).configure_title(anchor='middle', fontSize = 13)
+    female_chart = (
+    (
+        alt.Chart(avg_estimates_female)
+        .mark_bar(color='pink')
+        .encode(
+            x=alt.X('YEAR:O', title='Year'),
+            y=alt.Y('ESTIMATE:Q', title='Average Estimate'),
+            tooltip=[
+                alt.Tooltip('YEAR:O', title='Year'),
+                alt.Tooltip('ESTIMATE:Q', title='Average Estimate')
+            ]
+        )
+        + alt.Chart(pd.DataFrame({'y': [round(overall_avg_female, 2)]}))
+        .mark_rule(color='black', strokeDash=[4, 2])
+        .encode(
+            y='y:Q',
+            tooltip=[alt.Tooltip('y:Q', title='Overall Average', format=".2f")]
+        )
+    )
+    .properties(
+        title='Average Estimate for Females Over Time'
+    )
+    .configure_title(anchor='middle', fontSize=13)
+    )
 
 
     col1, col2 = st.columns(2)
     with col1:
-        st.write('Average **male** estimate (all years): **19.34**')
         st.altair_chart(male_chart, use_container_width=True)
+        st.markdown("""
+        <div style="text-align: center; font-size: 16px;">
+            Average <strong>male</strong> estimate (all years): <strong>19.34</strong>
+        </div>
+        """, unsafe_allow_html=True)
     
+
     with col2: 
-        st.write('Average **female** estimate (all years): **5.05**')
         st.altair_chart(female_chart, use_container_width=True)
+        st.markdown("""
+        <div style="text-align: center; font-size: 16px;">
+            Average <strong>female</strong> estimate (all years): <strong>5.05</strong>
+        </div>
+        """, unsafe_allow_html=True)
+
+
 
 ###########
 fn_map = {
