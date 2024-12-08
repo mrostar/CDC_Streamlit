@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
-import plotly.express as px
 
 
 # page configuration
@@ -263,7 +262,7 @@ def ethnic_page():
              **Hispanic or Latino (all races) females** had the lowest rate, with an average of **1.93**.
              """)
     
-    st.sidebar.header('Filter Race/Ethnic Group by Year')
+    st.sidebar.header('Filter Graph By Year')
 
     default_years = [2014, 2015, 2016, 2017, 2018]
 
@@ -302,7 +301,7 @@ def ethnic_page():
     ).properties(
         title='Average Suicide Estimate by Race/Ethnicity Across Selected Years'
     ).configure_axis(
-        labelAngle=-45)
+        labelAngle=-45).configure_title(anchor='middle')
     
 
     st.altair_chart(chart, use_container_width=True)
