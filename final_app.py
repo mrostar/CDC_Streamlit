@@ -17,9 +17,6 @@ df = load_data('streamlit_data.csv')
 if 'current_page' not in st.session_state:
     st.session_state.current_page = 'Introduction'
 
-# if "age_ranges" not in st.session_state:
-#     st.session_state.age_ranges = 'Age Range Analysis'
-
 # defines what to do when you click on a button
 def switch_page(page: str):
     st.session_state.current_page = page
@@ -84,7 +81,6 @@ def intro_page():
         
     st.altair_chart(layered_chart, use_container_width=True)
 
-   
     st.markdown(
          """
         <div style='font-size: 15px; line-height: 1.6; text-align: center; width: 100%; padding: 20px;'>
@@ -312,8 +308,8 @@ fn_map = {
     'Introduction': intro_page,
     'Age Range Analysis': age_page,
     'Gender Analysis': gender_page,
-    'Race/Ethnic Group Analysis': ethnic_page
-}
+    'Race/Ethnic Group Analysis': ethnic_page}
+
 main_window = st.container()
 main_workflow = fn_map.get(st.session_state.current_page, intro_page)
 main_workflow()
