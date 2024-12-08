@@ -322,9 +322,6 @@ def ethnic_page():
     st.altair_chart(chart, use_container_width=True)
 
 
-
-
-
 ###########
 fn_map = {
     'Introduction': intro_page,
