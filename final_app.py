@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import altair as alt
+import plotly.express as px
+
 
 # page configuration
 st.set_page_config(layout = "wide", initial_sidebar_state='expanded')
@@ -35,6 +37,10 @@ age_range_button = st.sidebar.button(
 gender_button =  st.sidebar.button(
     'Gender Analysis'.upper(), on_click=switch_page, args=['Gender Analysis']
 ) 
+gender_button =  st.sidebar.button(
+    'Race/Ethnic Group Analysis'.upper(), on_click=switch_page, args=['Race/Ethnic Group Analysis']
+) 
+
 
 # introduction page
 def intro_page():
@@ -261,11 +267,70 @@ def gender_page():
 
 
 
+
+###############
+def ethnic_page():
+    st.markdown("<h1 style='text-align: center;'>What race/ethnic group is at most risk?</h1>", unsafe_allow_html=True)
+    st.write("""
+             Across all years, **non-Hispanic or Latino American Indian or Alaskan Native 
+             males** had the highest rate, with an average of **25.67**. In comparison, across all years, 
+             **Hispanic or Latino (all races) females** had the lowest rate, with an average of **1.93**.
+             """)
+    
+    st.sidebar.header('Filter Race/Ethnic Group by Year')
+
+    default_years = [2014, 2015, 2016, 2017, 2018]
+
+    selected_years = st.sidebar.multiselect(
+            "Select Year(s):", 
+            options=sorted(df['YEAR'].unique()), 
+            default=default_years)
+
+    filtered_data = df[df['YEAR'].isin(selected_years)]
+
+
+    ethnic_groups = [
+        "Male: Not Hispanic or Latino: American Indian or Alaska Native", 
+        "Male: Not Hispanic or Latino: Black or African American", 
+        "Male: Hispanic or Latino: All races", 
+        "Male: Not Hispanic or Latino: Asian or Pacific Islander", 
+        "Male: Not Hispanic or Latino: White", 
+        "Female: Not Hispanic or Latino: American Indian or Alaska Native", 
+        "Female: Not Hispanic or Latino: Black or African American", 
+        "Female: Hispanic or Latino: All races", 
+        "Female: Not Hispanic or Latino: Asian or Pacific Islander", 
+        "Female: Not Hispanic or Latino: White"
+        ]
+
+
+    filtered_data = filtered_data[filtered_data['STUB_LABEL'].isin(ethnic_groups)]
+    filtered_data = filtered_data[filtered_data['STUB_NAME'] == 'Sex and race and Hispanic origin']
+
+    avg_estimates_race = filtered_data.groupby('STUB_LABEL')['ESTIMATE'].mean().reset_index()
+
+    chart = alt.Chart(avg_estimates_race).mark_bar().encode(
+        x=alt.X('STUB_LABEL:N', title='Race/Ethnicity', sort='-y'),  
+        y=alt.Y('ESTIMATE:Q', title='Average Estimate'),  
+        color='STUB_LABEL:N',  
+        tooltip=['STUB_LABEL:N', 'ESTIMATE:Q']  
+    ).properties(
+        title='Average Suicide Estimate by Race/Ethnicity Across Selected Years'
+    ).configure_axis(
+        labelAngle=-45)
+    
+
+    st.altair_chart(chart, use_container_width=True)
+
+
+
+
+
 ###########
 fn_map = {
     'Introduction': intro_page,
     'Age Range Analysis': age_page,
-    'Gender Analysis': gender_page
+    'Gender Analysis': gender_page,
+    'Race/Ethnic Group Analysis': ethnic_page
 }
 main_window = st.container()
 main_workflow = fn_map.get(st.session_state.current_page, intro_page)
