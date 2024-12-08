@@ -29,19 +29,19 @@ def switch_page(page: str):
 st.sidebar.subheader('Navigation')
 
 intro_button = st.sidebar.button(
-    'Introduction'.upper(), on_click=switch_page, args=['Introduction']
-)
+    'Introduction'.upper(), on_click=switch_page, args=['Introduction'])
+
 age_range_button = st.sidebar.button(
-    'Age Range Analysis'.upper(), on_click=switch_page, args=['Age Range Analysis']
-)
+    'Age Range Analysis'.upper(), on_click=switch_page, args=['Age Range Analysis'])
+
 gender_button =  st.sidebar.button(
-    'Gender Analysis'.upper(), on_click=switch_page, args=['Gender Analysis']
-) 
+    'Gender Analysis'.upper(), on_click=switch_page, args=['Gender Analysis']) 
+
 gender_button =  st.sidebar.button(
-    'Race/Ethnic Group Analysis'.upper(), on_click=switch_page, args=['Race/Ethnic Group Analysis']
-) 
+    'Race/Ethnic Group Analysis'.upper(), on_click=switch_page, args=['Race/Ethnic Group Analysis']) 
 
 
+#################
 # introduction page
 def intro_page():
     st.markdown("<h1 style='text-align: center;'>CDC Suicide Analysis Project</h1>", unsafe_allow_html=True)
@@ -54,8 +54,7 @@ def intro_page():
     selected_years = st.sidebar.multiselect(
         "Select Year(s):", 
         options=sorted(df['YEAR'].unique()), 
-        default= default_years
-    )
+        default= default_years)
 
     filtered_data = df[df['YEAR'].isin(selected_years)]
 
@@ -78,9 +77,8 @@ def intro_page():
         y=alt.Y('ESTIMATE:Q'),
         tooltip=[
             alt.Tooltip('YEAR:O', title='Year'),
-            alt.Tooltip('ESTIMATE:Q', title='Average Estimate')
-        ]
-    )
+            alt.Tooltip('ESTIMATE:Q', title='Average Estimate')])
+
     layered_chart = (bar_chart + line_chart).properties(
             title='Average Estimates Over Time'
         ).configure_title(anchor = 'middle')
@@ -96,8 +94,7 @@ def intro_page():
           as deaths per 100,000 residents (crude estimate).
           </div>
           """, 
-          unsafe_allow_html=True
-      )
+          unsafe_allow_html=True)
 
     df_filtered = df.dropna(subset=['ESTIMATE'])
     df_filtered['YEAR']= df_filtered['YEAR'].astype(str)
@@ -111,13 +108,12 @@ def intro_page():
     avg_estimates_by_year = avg_estimates_by_year.rename(columns={
         'YEAR': 'Year',
         'avg_estimate': 'Avg Estimate',
-        'num_observations': '# of non-null estimate taken'
-    })
+        'num_observations': '# of non-null estimate taken'})
 
     st.dataframe(avg_estimates_by_year, use_container_width=True)
 
     
-############################
+#################
 # avg estimate by age range page
 def age_page():
     st.title('Average Estimates By Age Range from 1950 to 2018')
@@ -148,9 +144,8 @@ def age_page():
             alt.Tooltip('AGE:N', title='Age Range'),
             alt.Tooltip('ESTIMATE:Q', title='Average Estimate')
         ]  
-    ).properties(
-        title='Average Estimate by Age Range Over Time'
-    ).configure_title(anchor = 'middle')
+    ).properties(title='Average Estimate by Age Range Over Time'
+                 ).configure_title(anchor = 'middle')
 
     st.altair_chart(line_chart, use_container_width=True)
 
@@ -164,7 +159,7 @@ def age_page():
 
 
 
-##############
+#################
 def gender_page():
     st.markdown("<h1 style='text-align: center;'>What gender is at most risk?</h1>", unsafe_allow_html=True)
 
@@ -181,8 +176,7 @@ def gender_page():
     selected_years = st.sidebar.multiselect(
         "Select Year(s):", 
         options=sorted(df['YEAR'].unique()), 
-        default= default_years
-    )
+        default= default_years)
 
     filtered_data = df[df['YEAR'].isin(selected_years)]
 
@@ -211,14 +205,11 @@ def gender_page():
         .mark_rule(color='black', strokeDash=[4, 2])
         .encode(
             y='y:Q',
-            tooltip=[alt.Tooltip('y:Q', title='Overall Average')]
-        )
+            tooltip=[alt.Tooltip('y:Q', title='Overall Average')])
     )
-    .properties(
-        title='Average Estimate for Males Over Time'
+    .properties(title='Average Estimate for Males Over Time'
     )
-    .configure_title(anchor='middle', fontSize=13)
-)
+    .configure_title(anchor='middle', fontSize=13))
 
 
     female_chart = (
@@ -237,14 +228,11 @@ def gender_page():
         .mark_rule(color='black', strokeDash=[4, 2])
         .encode(
             y='y:Q',
-            tooltip=[alt.Tooltip('y:Q', title='Overall Average', format=".2f")]
-        )
+            tooltip=[alt.Tooltip('y:Q', title='Overall Average', format=".2f")])
     )
-    .properties(
-        title='Average Estimate for Females Over Time'
+    .properties(title='Average Estimate for Females Over Time'
     )
-    .configure_title(anchor='middle', fontSize=13)
-    )
+    .configure_title(anchor='middle', fontSize=13))
 
 
     col1, col2 = st.columns(2)
@@ -266,9 +254,7 @@ def gender_page():
         """, unsafe_allow_html=True)
 
 
-
-
-###############
+#################
 def ethnic_page():
     st.markdown("<h1 style='text-align: center;'>What race/ethnic group is at most risk?</h1>", unsafe_allow_html=True)
     st.write("""
@@ -322,7 +308,7 @@ def ethnic_page():
     st.altair_chart(chart, use_container_width=True)
 
 
-###########
+#################
 fn_map = {
     'Introduction': intro_page,
     'Age Range Analysis': age_page,
