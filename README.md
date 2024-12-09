@@ -8,6 +8,7 @@ Similar to my suicide analysis project that was done in Tableau (https://github.
 
 ## Data operation/abstraction design
 The data used for this project was downloaded from the Centers for Disease Control and Prevention (CDC) website and contains information on estimated death rates for suicide in the United States, measured as deaths per 100,000 residents. It includes data from 1950 up to 2018 and is broken down by gender, age, and race/ethnic group. With the majority of the estimates being crude, I previously filtered the original dataset and wrote the filtered data to a new CSV. Leveraging Python, I also created a variety of filters on the dataset to get the necessary data needed to make the charts. 
+
 Link to data if interested: https://data.cdc.gov/NCHS/Death-rates-for-suicide-by-sex-race-Hispanic-origi/9j2v-jamp/about_data
 
  ## Future work
